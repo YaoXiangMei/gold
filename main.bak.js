@@ -22,7 +22,8 @@ const {
         draw
     } = require('./helper.js')
 const up = require('./up.js')
-const upPlan = require('./up-plan.js')
+const left = require('./left.js')
+const zgyh = require('./zgyh.js')
 
 const { getStatusBarHeight, getNavigationBarHeight } = require('./helper.js')
 
@@ -102,6 +103,13 @@ const createHighWindow = () => {
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
+                    <text textColor="#ffffff">支付宝点赞：</text>
+                    <button id="alipay3OperateIntervalMaxMinus" padding="0"  width="100px" h='90px'>-</button>
+                    <text id="alipay3OperateIntervalMax" textColor="#ffffff"></text>
+                    <button id="alipay3OperateIntervalMaxPlus" padding="0" width="100px" h='90px'>+</button>
+                </horizontal>
+                <horizontal h="5px" bg="#ffffff"></horizontal>
+                <horizontal>
                     <text textColor="#ffffff">上滑：</text>
                     <button id="upStartBtn" padding="0" width="120px" h='90px'>开始</button>
                     <button id="upStopBtn" padding="0" width="120px" h='90px'>暂停</button>
@@ -110,11 +118,19 @@ const createHighWindow = () => {
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
-                    <text textColor="#ffffff">定时开启：</text>
-                    <button id="planStartBtn" padding="0" width="120px" h='90px'>开始</button>
-                    <button id="planStopBtn" padding="0" width="120px" h='90px'>暂停</button>
+                    <text textColor="#ffffff">左滑：</text>
+                    <button id="leftStartBtn" padding="0" width="120px" h='90px'>开始</button>
+                    <button id="leftStopBtn" padding="0" width="120px" h='90px'>暂停</button>
                     <text textColor="#ffffff" marginLeft="6">状态：</text>
-                    <text id="planRunStatus" textColor="#ffffff">已暂停</text>
+                    <text id="leftRunStatus" textColor="#ffffff">已暂停</text>
+                </horizontal>
+                <horizontal h="5px" bg="#ffffff"></horizontal>
+                <horizontal>
+                    <text textColor="#ffffff">中国银行：</text>
+                    <button id="zgyhStart" padding="0" width="120px" h='90px'>开始</button>
+                    <button id="zgyhStop" padding="0" width="120px" h='90px'>暂停</button>
+                    <text textColor="#ffffff" marginLeft="6">状态：</text>
+                    <text id="zgyhRunStart" textColor="#ffffff">已暂停</text>
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
@@ -139,6 +155,18 @@ const createHighWindow = () => {
         }, 300)
     })
 
+    // 左滑
+    highWindow.leftStartBtn.click(() => {
+        setTimeout(() => {
+            left.start(highWindow)
+        }, 300)
+    })
+
+    highWindow.leftStopBtn.click(() => {
+        setTimeout(() => {
+            left.stop(highWindow)
+        }, 300)
+    })
 
     highWindow.closeBtn.click(() => {
         setTimeout(() => {
@@ -191,68 +219,26 @@ const createHighWindow = () => {
         setInit()
     })
 
-    let upPlanTimer = null
-    let upPlanStatus = 0 
-    function isCurrentTimeBetween(startHour, startMinute, endHour, endMinute) {
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-    
-        // 将开始和结束时间转换为分钟
-        const startTotalMinutes = startHour * 60 + startMinute;
-        const endTotalMinutes = endHour * 60 + endMinute;
-    
-        // 将当前时间转换为分钟
-        const currentTotalMinutes = currentHour * 60 + currentMinute;
-    
-        // 检查当前时间是否在指定时间之间
-        // 注意：这里假设开始和结束时间是在同一天内
-        return currentTotalMinutes >= startTotalMinutes && currentTotalMinutes <= endTotalMinutes;
-    }
-    const planUp = () => {
-        // 检测时间是否在00:01-01:00之间
-        if (isCurrentTimeBetween(0, 1, 1, 0)) {
-            // 回到主屏幕
-            home()
-            // 等待两秒
-            sleep(2000)
-            // 打开支付宝
-            app.launch('com.eg.android.AlipayGphone')
-            // 等待5秒
-            sleep(5000)
-            // 打开视频tab
-            click('视频')
-            // 等待5秒
-            sleep(5000)
-            // 点击上滑
-            up.start(highWindow)
-            upPlanStatus = 0
-        } else {
-            upPlanStatus = 1
-            upPlanTimer && clearTimeout(upPlanTimer)
-            upPlanTimer = setTimeout(() => {
-                planUp()
-            }, 5000)
-        }
-        ui.run(() => {
-            highWindow.planRunStatus.setText(upPlanStatus ? '定时任务开启' : '定时任务关闭')
-        })
-    }
+    // 支付宝点赞
+    highWindow.alipay3OperateIntervalMaxMinus.click(() => {
+        updateCommonStoreTime(ALIPAY_3_OPERATE_INTERVAL_MAX, 'minus', 1)
+        setInit()
+    })
+    highWindow.alipay3OperateIntervalMaxPlus.click(() => {
+        updateCommonStoreTime(ALIPAY_3_OPERATE_INTERVAL_MAX, 'plus', 1)
+        setInit()
+    })
 
-    // 定时任务开启
-    highWindow.planStartBtn.click(() => {
+    // 中国银行
+    highWindow.zgyhStart.click(() => {
         setTimeout(() => {
-            planUp()
+            zgyh.start(highWindow)
         }, 300)
     })
-    // 定时任务关闭
-    highWindow.planStopBtn.click(() => {
+
+    highWindow.zgyhStop.click(() => {
         setTimeout(() => {
-            upPlanStatus = 0
-            clearTimeout(upPlanTimer)
-            ui.run(() => {
-                highWindow.planRunStatus.setText(upPlanStatus ? '定时任务开启' : '定时任务关闭')
-            })
+            zgyh.stop(highWindow)
         }, 300)
     })
 
@@ -272,6 +258,7 @@ const createHighWindow = () => {
             highWindow.intervalTimeMax.setText(commonStore.get(INTERVAL_TIME_MAX).toString())
             highWindow.animationTimeMin.setText(commonStore.get(ANIMATION_TIME_MIN).toString())
             highWindow.animationTimeMax.setText(commonStore.get(ANIMATION_TIME_MAX).toString())
+            highWindow.alipay3OperateIntervalMax.setText(commonStore.get(ALIPAY_3_OPERATE_INTERVAL_MAX).toString())
         })
     }
 
@@ -301,7 +288,6 @@ const createVisibleFloatWindow = () => {
 }
 
 
-// 保持屏幕常亮
-device.keepScreenDim()
+
 
 setInterval(() => {}, 1000)
