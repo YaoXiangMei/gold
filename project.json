@@ -1,0 +1,10 @@
+{
+    "name": "gold",
+    "main": "main.js",
+    "ignore": [
+        "build"
+    ],
+    "packageName": "com.myx.gold",
+    "versionName": "1.0.0",
+    "versionCode": 1
+}
