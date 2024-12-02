@@ -104,6 +104,37 @@ const draw = (control, targetControl, floatWindowControl, initX, initY) => {
     })
 }
 
+// 关闭app
+function killApp(appName) {//填写包名或app名称都可以
+    var name = getPackageName(appName);//通过app名称获取包名
+    if(!name){//如果无法获取到包名，判断是否填写的就是包名
+        if(getAppName(appName)){
+            name = appName;//如果填写的就是包名，将包名赋值给变量
+        }else{
+            return false;
+        } 
+    }
+
+    app.openAppSetting(name);//通过包名打开应用的详情页(设置页)
+    text(app.getAppName(name)).waitFor();//通过包名获取已安装的应用名称，判断是否已经跳转至该app的应用设置界面
+    sleep(500);//稍微休息一下，不然看不到运行过程，自己用时可以删除这行
+    let stopBtn = textMatches(/(.*强.*|.*停.*|.*结.*)/).findOne();//在app的应用设置界面找寻包含“强”，“停”，“结”，“行”的控件
+
+
+    if (stopBtn.enabled()) {//判断控件是否已启用（想要关闭的app是否运行）
+        stopBtn.parent().click();//结束应用的控件如果无法点击，需要在布局中找寻它的父控件，如果还无法点击，再上一级控件，本案例就是控件无法点击
+        sleep(2000)
+        const sure = textMatches(/(.*确定.*)/).findOne()
+        // sure.click()//需找包含“确”，“定”的控件
+        sure.parent().click()
+        log(app.getAppName(name) + '应用已被关闭')
+        sleep(2000)
+        // back()
+    } else {
+        log(app.getAppName(name) + '应用不能被正常关闭或不在后台运行')
+        // back();
+    }
+}
 
 module.exports = {
     getStatusBarHeight,
@@ -115,5 +146,6 @@ module.exports = {
     ANIMATION_TIME_MIN,
     ANIMATION_TIME_MAX,
     ALIPAY_3_OPERATE_INTERVAL_MAX,
-    draw
+    draw,
+    killApp
 }

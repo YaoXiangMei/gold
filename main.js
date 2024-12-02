@@ -224,6 +224,10 @@ const createHighWindow = () => {
             click('视频')
             // 等待5秒
             sleep(5000)
+            // 点击x掉签到弹窗
+            click(5, deviceH / 2)
+            // 等待2秒
+            sleep(2000)
             // 点击上滑
             up.start(highWindow)
             upPlanStatus = 0
