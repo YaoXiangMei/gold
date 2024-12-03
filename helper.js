@@ -148,6 +148,8 @@ function killApp(appName) {//填写包名或app名称都可以
 
 // 打开支付宝
 function openAlipay() {
+    // 等待3秒
+    sleep(3000)
     // 回到主屏幕
     home()
     // 等待两秒
@@ -168,12 +170,37 @@ function openAlipay() {
 
 // 重启支付宝
 function restartAlipay() {
+    // 等待3秒
+    sleep(3000)
     // 关闭支付宝
     killApp('com.eg.android.AlipayGphone')
     // 等待3秒
     sleep(3000)
     // 打开支付宝
     openAlipay()
+}
+
+let levelPlayCount = 0
+// 检测如果在支付宝并且不是在播放页面，则重新打开支付宝
+function checkAlipayPlay() {
+    // console.log('checkAlipayPlay')
+    const packageName = currentPackage()
+    // 不是支付宝包名，直接返回
+    if (packageName !== 'com.eg.android.AlipayGphone') return
+
+    // 如果不在播放页面，则重新打开支付宝
+    const circleContainerView = id('com.alipay.android.living.dynamic:id/circleContainerView').exists()
+    const verticalInteractiveView = id("com.alipay.android.living.dynamic:id/vertical_interactive_view").exists()
+
+    if (circleContainerView && verticalInteractiveView) return
+    
+    levelPlayCount++
+    
+    // 累计到了3次，则重启支付宝
+    if (levelPlayCount > 3) {
+        levelPlayCount = 0
+        restartAlipay()
+    }
 }
 
 module.exports = {
@@ -190,5 +217,6 @@ module.exports = {
     draw,
     killApp,
     openAlipay,
-    restartAlipay
+    restartAlipay,
+    checkAlipayPlay
 }

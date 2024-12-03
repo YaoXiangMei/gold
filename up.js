@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay } = require('./helper.js')
 
 
 
@@ -76,11 +76,15 @@ const start = (window) => {
     timer = setTimeout(() => {
         start(window)
     }, intervalTime)
+
+    // 检测直播
     livePlay(window)
-    // console.log('------------------')
 
     // 检测是否浏览完成了
     aLipayBrowseed(window)
+
+    // 检查是否是在播放页面
+    checkAlipayPlay()
 
 }
 

@@ -126,7 +126,7 @@ const createHighWindow = () => {
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
                     <text textColor="#ffffff">清空所有设置：</text>
-                    <button id="resetStoreBtn" padding="0" width="240px" h='90px'>清空</button>
+                    <button id="resetStoreBtn" padding="0" width="120px" h='90px'>清空</button>
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>

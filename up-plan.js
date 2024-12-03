@@ -36,7 +36,7 @@ let timer = null
 let status = 0
 const start = (window) => {
    // 检测时间是否在00:01-01:00之间
-   if (isCurrentTimeBetween(11, 49, 21, 0)) {
+   if (isCurrentTimeBetween(0, 1, 1, 0)) {
         openAlipay()
         up.start(window)
         status = 0
