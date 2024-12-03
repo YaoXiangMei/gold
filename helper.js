@@ -25,7 +25,7 @@ const getNavigationBarHeight = () => {
 // 再次执行时间间隔
 const INTERVAL_TIME_MIN = 'INTERVAL_TIME_MIN'
 const INTERVAL_TIME_MAX = 'INTERVAL_TIME_MAX'
-const intervalTimeMinDefault = 2000
+const intervalTimeMinDefault = 5000
 const intervalTimeMaxDefault = 9000
 // 动画运行时间
 const ANIMATION_TIME_MIN = 'ANIMATION_TIME_MIN'
@@ -136,6 +136,36 @@ function killApp(appName) {//填写包名或app名称都可以
     }
 }
 
+// 打开支付宝
+function openAlipay() {
+    // 回到主屏幕
+    home()
+    // 等待两秒
+    sleep(3000)
+    // 打开支付宝
+    app.launch('com.eg.android.AlipayGphone')
+    // 等待5秒
+    sleep(5000)
+    // 打开视频tab
+    click('视频')
+    // 等待5秒
+    sleep(5000)
+    // 点击x掉签到弹窗
+    click(5, deviceH / 2)
+    // 等待3秒
+    sleep(3000)
+}
+
+// 重启支付宝
+function restartAlipay() {
+    // 关闭支付宝
+    killApp('com.eg.android.AlipayGphone')
+    // 等待3秒
+    sleep(3000)
+    // 打开支付宝
+    openAlipay()
+}
+
 module.exports = {
     getStatusBarHeight,
     getNavigationBarHeight,
@@ -147,5 +177,7 @@ module.exports = {
     ANIMATION_TIME_MAX,
     ALIPAY_3_OPERATE_INTERVAL_MAX,
     draw,
-    killApp
+    killApp,
+    openAlipay,
+    restartAlipay
 }

@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, getStatusBarHeight, killApp } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, restartAlipay } = require('./helper.js')
 
 
 
@@ -33,19 +33,38 @@ const getSwipeOptions = () => {
 
 }
 
+const getToday = () => {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    return `${year}${month}${day}`
+}
+
 let timer = null
 let status = 0
+function traverseChildren(view) {
+    if (view) {
+        // 遍历当前控件的所有直接子控件
+        for (var i = 0; i < view.childCount(); i++) {
+            var childView = view.child(i);
+            // 打印子控件的类名
+            console.log(childView.className());
+            if (childView.className() === 'android.view.View') {
+                // 如果子控件是View类型，则递归调用，遍历子控件的子控件
+                console.log(childView, 'childView')
+                console.log(childView.text(), 'childView.text')
+            }
+            // 递归调用，遍历子控件的子控件
+            traverseChildren(childView);
+        }
+    }
+}
 const start = (window) => {
-    // // 获取年月日
-    // const date = new Date()
-    // const year = date.getFullYear()
-    // const month = date.getMonth() + 1
-    // const day = date.getDate()
-    // const today = `${year}${month}${day}`
+    // const today = getToday()
     // const store = storages.create(today)
     // store.remove(today)
     // return
-    // console.log('------------------')
     status = 1
 
 
@@ -123,11 +142,7 @@ const aLipayBrowseed = (window) => {
     stop(window)
 
     // 获取年月日
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const today = `${year}${month}${day}`
+    const today = getToday()
     const store = storages.create(today)
     let count = store.get(today, 0)
     // 只切换一个账号
@@ -137,48 +152,40 @@ const aLipayBrowseed = (window) => {
     }
     store.put(today, count + 1)
 
+    // 走切换账号的流程
+
+    // 等待3秒
     sleep(3000)
 
+    // 点击我的
     click('我的')
 
+    // 等待3秒
     sleep(3000)
 
     // 点击设置
     const b = desc('设置').findOne().bounds()
     click(b.centerX(), b.centerY())
 
+    // 等待3秒
     sleep(3000)
 
     // 写死，点击登录其他账号
     click(deviceW / 2, deviceH - 500)
 
+    // 等待3秒
     sleep(3000)
 
-    // 点击第二个账号
+    // 写死, 点击第二个账号
     click(60 + (1020 - 60) / 2, 996 + (1260 - 996) / 2)
     
-    sleep(3000)
-    // 挂壁app
-    killApp('com.eg.android.AlipayGphone')
-
-    sleep(3000)
-
-    // 回到主页
-    home()
-
+    // 等待3秒
     sleep(3000)
 
     // 重新打开支付宝
-    app.launch('com.eg.android.AlipayGphone')
-    // 等待5秒
-    sleep(5000)
-    // 打开视频tab
-    click('视频')
-    // 等待5秒
-    sleep(5000)
-    // 点击x掉签到弹窗
-    click(5, deviceH / 2)
-    // 等待2秒
+    restartAlipay()
+
+    // 等待3秒
     sleep(3000)
     // 重新开始
     start(window)

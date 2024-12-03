@@ -1,74 +1,55 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, getStatusBarHeight } = require('./helper.js')
+const { createCommonStore, killApp, openAlipay, restartAlipay } = require('./helper.js')
+const up = require('./up.js')
 
 
 
 const commonStorage = createCommonStore()
 
+/* 
+* 判断当前时间是否在指定时间范围内
+* @param {number} startHour - 开始小时
+* @param {number} startMinute - 开始分钟
+* @param {number} endHour - 结束小时
+* @param {number} endMinute - 结束分钟
+*/
+function isCurrentTimeBetween(startHour, startMinute, endHour, endMinute) {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
-const getSwipeOptions = () => {
-   
-    const xStartPoint = 300
-    
-    const startX = random(xStartPoint, deviceW - xStartPoint) // 起始位置x坐标
-    const startY = random(deviceH - 500 - 100, deviceH - 500) // 起始位置y坐标
-    // const endX = startX;  // 保持X坐标不变，实现垂直滑动
-    const endX = random(xStartPoint - 10, xStartPoint + 10) // 结束位置x坐标
-    const endY = random(300, 400)
+    // 将开始和结束时间转换为分钟
+    const startTotalMinutes = startHour * 60 + startMinute
+    const endTotalMinutes = endHour * 60 + endMinute
 
-    const animationTimeMin = Number(commonStorage.get(ANIMATION_TIME_MIN))
-    const animationTimeMax = Number(commonStorage.get(ANIMATION_TIME_MAX))
+    // 将当前时间转换为分钟
+    const currentTotalMinutes = currentHour * 60 + currentMinute
 
-    const duration = random(animationTimeMin, animationTimeMax) // 滑动持续时间，单位为毫秒
-
-    return {
-        startX,
-        startY,
-        endX,
-        endY,
-        duration
-    }
-
+    // 检查当前时间是否在指定时间之间
+    // 注意：这里假设开始和结束时间是在同一天内
+    return currentTotalMinutes >= startTotalMinutes && currentTotalMinutes <= endTotalMinutes
 }
 
 let timer = null
 let status = 0
 const start = (window) => {
-    // console.log('------------------')
-    status = 1
-
-
-    const { startX, startY, endX, endY, duration } = getSwipeOptions()
-
-    // console.log('上滑开始', startX, startY, endX, endY, duration)
-
-    swipe(startX, startY, endX, endY, duration)
-        
-    
-    ui.run(function(){
-        window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
-    })
-
-    const intervalTimeMin = Number(commonStorage.get(INTERVAL_TIME_MIN))
-    const intervalTimeMax = Number(commonStorage.get(INTERVAL_TIME_MAX))
-    
-    if (intervalTimeMin < 0 || intervalTimeMax < 0 || intervalTimeMin > intervalTimeMax) {
-        toast('上滑时间间隔配置错误')
-        exit()
+   // 检测时间是否在00:01-01:00之间
+   if (isCurrentTimeBetween(10, 12, 21, 0)) {
+        openAlipay()
+        up.start(window)
+        status = 0
+    } else {
+        status = 1
+        timer && clearTimeout(timer)
+        timer = setTimeout(() => {
+            start(window)
+        }, 5000)
     }
-    // const intervalTime = random(3000, 8000)
-    const intervalTime = random(Number(intervalTimeMin), Number(intervalTimeMax))
-
-    // console.log(intervalTime + '毫秒后上滑动再次运行')
-
-    timer && clearTimeout(timer)
-    timer = setTimeout(() => {
-        start(window)
-    }, intervalTime)
-    livePlay(window)
-    // console.log('------------------')
+    ui.run(function() {
+        window.planRunStatus.setText(status ? '已开启' : '已关闭')
+    })
 
 }
 
@@ -76,23 +57,9 @@ const stop = (window) => {
     timer && clearTimeout(timer)
     status = 0
     ui.run(function(){
-        window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
+        window.planRunStatus.setText(status ? '已开启' : '已关闭')
     })
     console.log('上滑停止')
-}
-
-// 判断是否是直播间
-const livePlay = (window) => {
-    setTimeout(() => {
-        const live = text('点击进入直播间').exists()
-        if (live) {
-            // console.log('检测到直播间')
-            setTimeout(() => {
-                start(window)
-            }, 2000)
-            return 
-        }
-    }, 1000)
 }
 
 module.exports = {

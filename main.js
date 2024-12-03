@@ -191,72 +191,16 @@ const createHighWindow = () => {
         setInit()
     })
 
-    let upPlanTimer = null
-    let upPlanStatus = 0 
-    function isCurrentTimeBetween(startHour, startMinute, endHour, endMinute) {
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-    
-        // 将开始和结束时间转换为分钟
-        const startTotalMinutes = startHour * 60 + startMinute;
-        const endTotalMinutes = endHour * 60 + endMinute;
-    
-        // 将当前时间转换为分钟
-        const currentTotalMinutes = currentHour * 60 + currentMinute;
-    
-        // 检查当前时间是否在指定时间之间
-        // 注意：这里假设开始和结束时间是在同一天内
-        return currentTotalMinutes >= startTotalMinutes && currentTotalMinutes <= endTotalMinutes;
-    }
-    const planUp = () => {
-        // 检测时间是否在00:01-01:00之间
-        if (isCurrentTimeBetween(0, 1, 1, 0)) {
-            // 回到主屏幕
-            home()
-            // 等待两秒
-            sleep(2000)
-            // 打开支付宝
-            app.launch('com.eg.android.AlipayGphone')
-            // 等待5秒
-            sleep(5000)
-            // 打开视频tab
-            click('视频')
-            // 等待5秒
-            sleep(5000)
-            // 点击x掉签到弹窗
-            click(5, deviceH / 2)
-            // 等待2秒
-            sleep(2000)
-            // 点击上滑
-            up.start(highWindow)
-            upPlanStatus = 0
-        } else {
-            upPlanStatus = 1
-            upPlanTimer && clearTimeout(upPlanTimer)
-            upPlanTimer = setTimeout(() => {
-                planUp()
-            }, 5000)
-        }
-        ui.run(() => {
-            highWindow.planRunStatus.setText(upPlanStatus ? '定时任务开启' : '定时任务关闭')
-        })
-    }
-
     // 定时任务开启
     highWindow.planStartBtn.click(() => {
         setTimeout(() => {
-            planUp()
+            upPlan.start(highWindow)
         }, 300)
     })
     // 定时任务关闭
     highWindow.planStopBtn.click(() => {
         setTimeout(() => {
-            upPlanStatus = 0
-            clearTimeout(upPlanTimer)
-            ui.run(() => {
-                highWindow.planRunStatus.setText(upPlanStatus ? '定时任务开启' : '定时任务关闭')
-            })
+            upPlan.stop(highWindow)
         }, 300)
     })
 
@@ -264,8 +208,6 @@ const createHighWindow = () => {
     ui.run(() => {
         highWindow.setPosition(wx, wy)
     })
-
-
 
     draw('moveBtn', highWindow, highWindow, wx, wy)
 
