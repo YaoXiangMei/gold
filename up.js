@@ -140,6 +140,8 @@ const aLipayBrowseed = (window) => {
     // 只切换一个账号
     if (count >= 1) {
         stop(window)
+        sleep(3000)
+        home()
         return
     }
     commonStorage.put(today, count + 1)
