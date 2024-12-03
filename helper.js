@@ -37,18 +37,28 @@ const animationTimeMaxDefault = 130
 const ALIPAY_3_OPERATE_INTERVAL_MAX = 'ALIPAY_3_OPERATE_INTERVAL_MAX'
 const alipay3OperateIntervalMaxDefault = 5 // 随机1 - x之间的数
 
+// 支付宝是否需要切换账号
+const ALIPAY_SWITCH_ACCOUNT = 'ALIPAY_SWITCH_ACCOUNT'
+const ALIPAY_SWITCH_ACCOUNT_DEFAULT = 0
+
 const createCommonStore = () => {
     const storage = storages.create('common')
     storage.get(INTERVAL_TIME_MIN) || storage.put(INTERVAL_TIME_MIN, intervalTimeMinDefault)
     storage.get(INTERVAL_TIME_MAX) || storage.put(INTERVAL_TIME_MAX, intervalTimeMaxDefault)
     storage.get(ANIMATION_TIME_MIN) || storage.put(ANIMATION_TIME_MIN, animationTimeMinDefault)
     storage.get(ANIMATION_TIME_MAX) || storage.put(ANIMATION_TIME_MAX, animationTimeMaxDefault)
+
     if (storage.get(ALIPAY_3_OPERATE_INTERVAL_MAX) === undefined) {
         storage.put(ALIPAY_3_OPERATE_INTERVAL_MAX, alipay3OperateIntervalMaxDefault)
     } else {
         storage.put(ALIPAY_3_OPERATE_INTERVAL_MAX, storage.get(ALIPAY_3_OPERATE_INTERVAL_MAX))
     }
     // storage.get(ALIPAY_3_OPERATE_INTERVAL_MAX) || storage.put(ALIPAY_3_OPERATE_INTERVAL_MAX, alipay3OperateIntervalMaxDefault)
+    if (storage.get(ALIPAY_SWITCH_ACCOUNT) === undefined) {
+        storage.put(ALIPAY_SWITCH_ACCOUNT, ALIPAY_SWITCH_ACCOUNT_DEFAULT)
+    } else {
+        storage.put(ALIPAY_SWITCH_ACCOUNT, storage.get(ALIPAY_SWITCH_ACCOUNT))
+    }
     return storage
 }
 
@@ -176,6 +186,7 @@ module.exports = {
     ANIMATION_TIME_MIN,
     ANIMATION_TIME_MAX,
     ALIPAY_3_OPERATE_INTERVAL_MAX,
+    ALIPAY_SWITCH_ACCOUNT,
     draw,
     killApp,
     openAlipay,

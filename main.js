@@ -19,6 +19,7 @@ const {
         ANIMATION_TIME_MIN,
         ANIMATION_TIME_MAX,
         ALIPAY_3_OPERATE_INTERVAL_MAX,
+        ALIPAY_SWITCH_ACCOUNT,
         draw
     } = require('./helper.js')
 const up = require('./up.js')
@@ -116,6 +117,17 @@ const createHighWindow = () => {
                     <text textColor="#ffffff" marginLeft="6">状态：</text>
                     <text id="planRunStatus" textColor="#ffffff">已暂停</text>
                 </horizontal>
+                <horizontal>
+                    <text textColor="#ffffff">是否切换账号：</text>
+                    <button id="switchAccountBtn" padding="0" width="240px" h='90px'>点击设置</button>
+                    <text textColor="#ffffff" marginLeft="6">状态：</text>
+                    <text id="switchAccountStatus" textColor="#ffffff">否</text>
+                </horizontal>
+                <horizontal h="5px" bg="#ffffff"></horizontal>
+                <horizontal>
+                    <text textColor="#ffffff">清空所有设置：</text>
+                    <button id="resetStoreBtn" padding="0" width="240px" h='90px'>清空</button>
+                </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
                     <button id="moveBtn" padding="0" width="120px" h='90px'>拖动</button>
@@ -204,6 +216,18 @@ const createHighWindow = () => {
         }, 300)
     })
 
+    // 是否需要切换支付宝账号
+    highWindow.switchAccountBtn.click(() => {
+        up.switchAccount(highWindow)
+    })
+
+    // 清空所有store设置
+    highWindow.resetStoreBtn.click(() => {
+        const commonStore = createCommonStore()
+        commonStore.clear()
+        setInit()
+    })
+
 
     ui.run(() => {
         highWindow.setPosition(wx, wy)
@@ -218,6 +242,7 @@ const createHighWindow = () => {
             highWindow.intervalTimeMax.setText(commonStore.get(INTERVAL_TIME_MAX).toString())
             highWindow.animationTimeMin.setText(commonStore.get(ANIMATION_TIME_MIN).toString())
             highWindow.animationTimeMax.setText(commonStore.get(ANIMATION_TIME_MAX).toString())
+            highWindow.switchAccountStatus.setText(Number(commonStore.get(ALIPAY_SWITCH_ACCOUNT)) == 1 ? '是' : '否')
         })
     }
 

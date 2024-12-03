@@ -36,7 +36,7 @@ let timer = null
 let status = 0
 const start = (window) => {
    // 检测时间是否在00:01-01:00之间
-   if (isCurrentTimeBetween(10, 12, 21, 0)) {
+   if (isCurrentTimeBetween(11, 49, 21, 0)) {
         openAlipay()
         up.start(window)
         status = 0
@@ -48,7 +48,7 @@ const start = (window) => {
         }, 5000)
     }
     ui.run(function() {
-        window.planRunStatus.setText(status ? '已开启' : '已关闭')
+        window.planRunStatus.setText(status == 1 ? '已开启' : '已关闭')
     })
 
 }
@@ -57,7 +57,7 @@ const stop = (window) => {
     timer && clearTimeout(timer)
     status = 0
     ui.run(function(){
-        window.planRunStatus.setText(status ? '已开启' : '已关闭')
+        window.planRunStatus.setText(status == 1 ? '已开启' : '已关闭')
     })
     console.log('上滑停止')
 }
