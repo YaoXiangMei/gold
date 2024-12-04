@@ -135,14 +135,17 @@ function killApp(appName) {//填写包名或app名称都可以
         stopBtn.parent().click();//结束应用的控件如果无法点击，需要在布局中找寻它的父控件，如果还无法点击，再上一级控件，本案例就是控件无法点击
         sleep(2000)
         const sure = textMatches(/(.*确定.*)/).findOne()
-        // sure.click()//需找包含“确”，“定”的控件
+        sure.click() //需找包含“确”，“定”的控件
         sure.parent().click()
+        sure.parent().parent().click()
         log(app.getAppName(name) + '应用已被关闭')
         sleep(2000)
-        // back()
+        back()
+        sleep(2000)
     } else {
         log(app.getAppName(name) + '应用不能被正常关闭或不在后台运行')
-        // back();
+        back();
+        sleep(2000)
     }
 }
 
@@ -172,8 +175,13 @@ function openAlipay() {
 function restartAlipay() {
     // 等待3秒
     sleep(3000)
+    home()
+    // 等待3秒
+    sleep(3000)
     // 关闭支付宝
     killApp('com.eg.android.AlipayGphone')
+    // 等待3秒
+    home()
     // 等待3秒
     sleep(3000)
     // 打开支付宝
@@ -189,15 +197,13 @@ function checkAlipayPlay() {
     if (packageName !== 'com.eg.android.AlipayGphone') return
 
     // 如果不在播放页面，则重新打开支付宝
-    const circleContainerView = id('com.alipay.android.living.dynamic:id/circleContainerView').exists()
-    const verticalInteractiveView = id("com.alipay.android.living.dynamic:id/vertical_interactive_view").exists()
+    const  tabContainer = id('com.alipay.android.living.dynamic:id/tab_container').exists()
+    if (tabContainer) return
 
-    if (circleContainerView && verticalInteractiveView) return
-    
     levelPlayCount++
     
-    // 累计到了3次，则重启支付宝
-    if (levelPlayCount > 3) {
+    // 累计到了5次，则重启支付宝
+    if (levelPlayCount > 5) {
         levelPlayCount = 0
         restartAlipay()
     }
