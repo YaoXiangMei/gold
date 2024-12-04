@@ -125,6 +125,16 @@ const createHighWindow = () => {
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
+                    <text textColor="#ffffff">支付宝3连：</text>
+                    <button id="alipay3OperateIntervalMaxMinus" padding="0"  width="100px" h='90px'>-</button>
+                    <text id="alipay3OperateIntervalMax" textColor="#ffffff"></text>
+                    <button id="alipay3OperateIntervalMaxPlus" padding="0" width="100px" h='90px'>+</button>
+                </horizontal>
+                <horizontal>
+                    <text textColor="#ffffff">设置为0则不进行操作,小于等于8则点赞+收藏+关注，设置大于8小于等于10则点赞+收藏，设置大于10则点赞</text>
+                </horizontal>
+                <horizontal h="5px" bg="#ffffff"></horizontal>
+                <horizontal>
                     <text textColor="#ffffff">清空所有设置：</text>
                     <button id="resetStoreBtn" padding="0" width="120px" h='90px'>清空</button>
                 </horizontal>
@@ -228,6 +238,15 @@ const createHighWindow = () => {
         setInit()
     })
 
+     // 支付宝点赞
+     highWindow.alipay3OperateIntervalMaxMinus.click(() => {
+        updateCommonStoreTime(ALIPAY_3_OPERATE_INTERVAL_MAX, 'minus', 1)
+        setInit()
+    })
+    highWindow.alipay3OperateIntervalMaxPlus.click(() => {
+        updateCommonStoreTime(ALIPAY_3_OPERATE_INTERVAL_MAX, 'plus', 1)
+        setInit()
+    })
 
     ui.run(() => {
         highWindow.setPosition(wx, wy)
@@ -242,6 +261,7 @@ const createHighWindow = () => {
             highWindow.intervalTimeMax.setText(commonStore.get(INTERVAL_TIME_MAX).toString())
             highWindow.animationTimeMin.setText(commonStore.get(ANIMATION_TIME_MIN).toString())
             highWindow.animationTimeMax.setText(commonStore.get(ANIMATION_TIME_MAX).toString())
+            highWindow.alipay3OperateIntervalMax.setText(commonStore.get(ALIPAY_3_OPERATE_INTERVAL_MAX).toString())
             highWindow.switchAccountStatus.setText(Number(commonStore.get(ALIPAY_SWITCH_ACCOUNT)) == 1 ? '是' : '否')
         })
     }
