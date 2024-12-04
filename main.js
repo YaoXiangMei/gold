@@ -131,7 +131,7 @@ const createHighWindow = () => {
                     <button id="alipay3OperateIntervalMaxPlus" padding="0" width="100px" h='90px'>+</button>
                 </horizontal>
                 <horizontal>
-                    <text textColor="#ffffff">设置为0则不进行操作,小于等于8则点赞+收藏+关注，设置大于8小于等于10则点赞+收藏，设置大于10则点赞</text>
+                    <text textColor="#ffffff">0不操作,小等于8点赞+收藏+关注，大于8小于等于10点赞+收藏，大于10点赞</text>
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>

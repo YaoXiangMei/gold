@@ -35,7 +35,7 @@ const animationTimeMaxDefault = 130
 
 // 支付宝点赞的随机数
 const ALIPAY_3_OPERATE_INTERVAL_MAX = 'ALIPAY_3_OPERATE_INTERVAL_MAX'
-const alipay3OperateIntervalMaxDefault = 5 // 随机1 - x之间的数
+const alipay3OperateIntervalMaxDefault = 0 // 随机1 - x之间的数，0表示不随机
 
 // 支付宝是否需要切换账号
 const ALIPAY_SWITCH_ACCOUNT = 'ALIPAY_SWITCH_ACCOUNT'
