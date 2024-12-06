@@ -135,9 +135,9 @@ function killApp(appName) {//填写包名或app名称都可以
         stopBtn.parent().click();//结束应用的控件如果无法点击，需要在布局中找寻它的父控件，如果还无法点击，再上一级控件，本案例就是控件无法点击
         sleep(2000)
         const sure = textMatches(/(.*确定.*)/).findOne()
-        sure.click() //需找包含“确”，“定”的控件
-        sure.parent().click()
-        sure.parent().parent().click()
+        const bounds = sure.bounds()
+        sleep(2000)
+        click(bounds.centerX(),bounds.centerY())
         log(app.getAppName(name) + '应用已被关闭')
         sleep(2000)
         back()

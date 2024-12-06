@@ -13,10 +13,10 @@ const getSwipeOptions = () => {
     const xStartPoint = 300
     
     const startX = random(xStartPoint, deviceW - xStartPoint) // 起始位置x坐标
-    const startY = random(deviceH - 500 - 100, deviceH - 500) // 起始位置y坐标
+    const startY = random(deviceH - 500 - 100, deviceH - 600) // 起始位置y坐标
     // const endX = startX;  // 保持X坐标不变，实现垂直滑动
-    const endX = random(xStartPoint - 10, xStartPoint + 10) // 结束位置x坐标
-    const endY = random(300, 400)
+    const endX = random(xStartPoint - 60, xStartPoint + 60) // 结束位置x坐标
+    const endY = random(200, 500)
 
     const animationTimeMin = Number(commonStorage.get(ANIMATION_TIME_MIN))
     const animationTimeMax = Number(commonStorage.get(ANIMATION_TIME_MAX))
@@ -45,7 +45,7 @@ let timer = null
 let status = 0
 
 const start = (window) => {
-   
+    
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions()
@@ -96,6 +96,20 @@ const stop = (window) => {
     console.log('上滑停止')
 }
 
+// 随机上滑或者暂停
+const randomOperation = () => {
+    const num = random(1, 10)
+    // 只有等于1的时候才操作
+    if(num != 1) return
+
+    if(random(1, 2) == 1){
+        click(random(5, 10), deviceH / 2 + random(1, 80))
+    } else {
+        const { startX, startY, endX, endY, duration } = getSwipeOptions()
+        // 下划
+        swipe(endX, endY, startX, startY, duration)
+    }
+}
 // 判断是否是直播间
 const livePlay = (window) => {
     setTimeout(() => {
@@ -108,9 +122,10 @@ const livePlay = (window) => {
             return 
         }
         operate3()
+        randomOperation()
     }, 1000)
 }
-
+//
 // 判断支付宝是否全部刷完了
 const aLipayBrowseed = (window) => {
 
@@ -159,8 +174,8 @@ const aLipayBrowseed = (window) => {
     sleep(3000)
 
     // 点击设置
-    const b = desc('设置').findOne().bounds()
-    click(b.centerX(), b.centerY())
+    const settingBounds = desc('设置').findOne().bounds()
+    click(settingBounds.centerX(), settingBounds.centerY())
 
     // 等待3秒
     sleep(3000)
