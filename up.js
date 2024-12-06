@@ -131,6 +131,10 @@ const is30Minutes = () => {
 
 // 随机上滑、暂停（点击）、长按快进
 const randomOperation = () => {
+    const packageName = currentPackage()
+    // 不是支付宝包名，直接返回
+    if (packageName !== 'com.eg.android.AlipayGphone') return
+    
     const num = random(1, 10)
 
     // 模拟轻摸屏幕
@@ -243,6 +247,10 @@ const switchAccount = (window) => {
 
 // 支付宝3连
 const operate3 = () => {
+    const packageName = currentPackage()
+    // 不是支付宝包名，直接返回
+    if (packageName !== 'com.eg.android.AlipayGphone') return
+
     const intervalMax = commonStorage.get(ALIPAY_3_OPERATE_INTERVAL_MAX)
     // 0的话标表示停止, 不进行三连操作
     if (intervalMax == 0) return
