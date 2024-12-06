@@ -160,7 +160,8 @@ function closeCurrentApp() {
    gestures([0, 300, [0, deviceH], [deviceW - 100, deviceH - 600], [deviceW - 200, deviceH - 500]])
    sleep(2000)
    // 关闭最右的任务
-   swipe(deviceW - 20, startY, deviceW - 20, endY, 110)
+   console.log(deviceW - 30, startY, deviceW - 25, endY)
+   swipe(deviceW - 30, startY, deviceW - 25, endY, 200)
    sleep(2000)
    // 回到主页
    home()
@@ -196,9 +197,22 @@ function restartAlipay() {
     // 等待3秒
     sleep(3000)
     // 关闭支付宝
-    closeCurrentApp()
-    // killApp('com.eg.android.AlipayGphone')
+    killApp('com.eg.android.AlipayGphone')
     // 等待3秒
+    home()
+    // 等待3秒
+    sleep(3000)
+    // 打开支付宝
+    openAlipay()
+}
+
+// 重新打开支付宝
+function resetOpenAlipay() {
+    // 等待3秒
+    sleep(3000)
+    closeCurrentApp()
+    // 等待3秒
+    sleep(3000)
     home()
     // 等待3秒
     sleep(3000)
@@ -243,5 +257,6 @@ module.exports = {
     closeCurrentApp,
     openAlipay,
     restartAlipay,
+    resetOpenAlipay,
     checkAlipayPlay
 }

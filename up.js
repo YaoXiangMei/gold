@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, resetOpenAlipay } = require('./helper.js')
 
 
 
@@ -45,6 +45,9 @@ let timer = null
 let status = 0
 
 const start = (window) => {
+    // const date = new Date()
+    // console.log(date.getMinutes())
+    // return 
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions()
@@ -105,9 +108,25 @@ const livePlay = (window) => {
             }, 2000)
             return 
         }
+    
+        if (is30Minutes()) {
+            stop(window)
+            sleep(45000)
+            resetOpenAlipay()
+            start(window)
+            return
+        }
+
         operate3()
         randomOperation()
     }, 1000)
+}
+
+// 判断在每个小时的第30分钟重启一次支付宝
+const is30Minutes = () => {
+    const date = new Date()
+    const minutes = date.getMinutes()
+    return minutes == 30
 }
 
 // 随机上滑、暂停（点击）、长按快进

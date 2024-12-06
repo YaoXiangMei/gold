@@ -152,6 +152,12 @@ const createHighWindow = () => {
             up.start(highWindow)
         }, 300)
     })
+    // 上滑操作
+    highWindow.upStopBtn.click(() => {
+        setTimeout(() => {
+            up.stop(highWindow)
+        }, 300)
+    })
 
     highWindow.closeBtn.click(() => {
         setTimeout(() => {
