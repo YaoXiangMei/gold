@@ -43,8 +43,6 @@ const getToday = () => {
 
 let timer = null
 let status = 0
-// let twoLoopStatus = 0 // 0，未开启，1开启
-// let twoLoopIndex = 1
 
 const start = (window) => {
     status = 1
@@ -53,27 +51,10 @@ const start = (window) => {
 
     // console.log('上滑开始', startX, startY, endX, endY, duration)
 
-    // 不开启二人转
-    // if (twoLoopStatus == 0) {
-    //     // 上划
-    //     swipe(startX, startY, endX, endY, duration)
-    // } else if (twoLoopStatus == 1) { // 开启了二人转
-    //     // 如果说是第二个视频
-    //     if (twoLoopIndex == 2) {
-    //         // 下滑-看看一个视频
-    //         swipe(startX, endY, endX, startY, duration)
-    //         twoLoopIndex = 0
-    //     } else {
-    //         // 上划
-    //         swipe(startX, startY, endX, endY, duration)
-    //     }
-    //     twoLoopIndex++
-    // }
     swipe(startX, startY, endX, endY, duration)
     
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
-        // window.upTwoLoopRunStatus.setText(`开启状态：${twoLoopStatus}, 第几个视频：${twoLoopIndex}，请注意调整长视频的位置`)
     })
 
     const intervalTimeMin = Number(commonStorage.get(INTERVAL_TIME_MIN))
@@ -273,30 +254,10 @@ const collect = () => {
     collect && collect.click()
 }
 
-// const twoLoop = (window) => {
-//     if (twoLoopStatus == 1) {
-//         twoLoopStatus = 0
-//     } else {
-//         twoLoopStatus = 1
-//     }
-//     twoLoopIndex = 1
-//     ui.run(function(){
-//         window.upTwoLoopRunStatus.setText(`开启状态：${twoLoopStatus}, 第几个视频：${twoLoopIndex}，请注意调整长视频的位置`)
-//     })
-// }
-
-// const initTwoLoopRender = (window) => {
-//     ui.run(function(){
-//         window.upTwoLoopRunStatus.setText(`开启状态：${twoLoopStatus}, 第几个视频：${twoLoopIndex}，请注意调整长视频的位置`)
-//     })
-// }
-
 module.exports = {
     start,
     stop,
     status,
     timer,
-    switchAccount,
-    // twoLoop,
-    // initTwoLoopRender,
+    switchAccount
 }
