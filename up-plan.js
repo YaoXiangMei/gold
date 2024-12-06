@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, killApp, openAlipay, restartAlipay } = require('./helper.js')
+const { createCommonStore, openAlipay } = require('./helper.js')
 const up = require('./up.js')
 
 

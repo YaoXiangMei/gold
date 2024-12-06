@@ -1,3 +1,5 @@
+const { deviceW, deviceH } = require('./config.js')
+
 // 获取状态栏高度
 const getStatusBarHeight = () => {
     const resourceId = context.getResources().getIdentifier('status_bar_height', 'dimen', 'android')
@@ -25,13 +27,13 @@ const getNavigationBarHeight = () => {
 // 再次执行时间间隔
 const INTERVAL_TIME_MIN = 'INTERVAL_TIME_MIN'
 const INTERVAL_TIME_MAX = 'INTERVAL_TIME_MAX'
-const intervalTimeMinDefault = 5000
-const intervalTimeMaxDefault = 9000
+const intervalTimeMinDefault = 10000
+const intervalTimeMaxDefault = 15000
 // 动画运行时间
 const ANIMATION_TIME_MIN = 'ANIMATION_TIME_MIN'
 const ANIMATION_TIME_MAX = 'ANIMATION_TIME_MAX'
 const animationTimeMinDefault = 110
-const animationTimeMaxDefault = 130
+const animationTimeMaxDefault = 300
 
 // 支付宝点赞的随机数
 const ALIPAY_3_OPERATE_INTERVAL_MAX = 'ALIPAY_3_OPERATE_INTERVAL_MAX'
@@ -39,7 +41,7 @@ const alipay3OperateIntervalMaxDefault = 0 // 随机1 - x之间的数，0表示�
 
 // 支付宝是否需要切换账号
 const ALIPAY_SWITCH_ACCOUNT = 'ALIPAY_SWITCH_ACCOUNT'
-const ALIPAY_SWITCH_ACCOUNT_DEFAULT = 0
+const ALIPAY_SWITCH_ACCOUNT_DEFAULT = 0 // 0表示不切换，1表示切换
 
 const createCommonStore = () => {
     const storage = storages.create('common')
@@ -149,6 +151,21 @@ function killApp(appName) {//填写包名或app名称都可以
     }
 }
 
+// 关闭app
+function closeCurrentApp() {
+    const startY = random(deviceH - 500 - 100, deviceH - 600) // 起始位置y坐标
+    const endY = random(200, 500)
+
+    // 打开多任务栏
+   gestures([0, 300, [0, deviceH], [deviceW - 100, deviceH - 600], [deviceW - 200, deviceH - 500]])
+   sleep(2000)
+   // 关闭最右的任务
+   swipe(deviceW - 20, startY, deviceW - 20, endY, 110)
+   sleep(2000)
+   // 回到主页
+   home()
+}
+
 // 打开支付宝
 function openAlipay() {
     // 等待3秒
@@ -179,7 +196,8 @@ function restartAlipay() {
     // 等待3秒
     sleep(3000)
     // 关闭支付宝
-    killApp('com.eg.android.AlipayGphone')
+    closeCurrentApp()
+    // killApp('com.eg.android.AlipayGphone')
     // 等待3秒
     home()
     // 等待3秒
@@ -222,6 +240,7 @@ module.exports = {
     ALIPAY_SWITCH_ACCOUNT,
     draw,
     killApp,
+    closeCurrentApp,
     openAlipay,
     restartAlipay,
     checkAlipayPlay

@@ -129,9 +129,7 @@ const createHighWindow = () => {
                     <button id="alipay3OperateIntervalMaxMinus" padding="0"  width="100px" h='90px'>-</button>
                     <text id="alipay3OperateIntervalMax" textColor="#ffffff"></text>
                     <button id="alipay3OperateIntervalMaxPlus" padding="0" width="100px" h='90px'>+</button>
-                </horizontal>
-                <horizontal>
-                    <text textColor="#ffffff">0不操作,小等于8点赞+收藏+关注，大于8小于等于10点赞+收藏，大于10点赞</text>
+                    <button id="alipay3OperateTips" padding="0" width="240px" h='90px'>查看提示</button>
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
@@ -233,12 +231,16 @@ const createHighWindow = () => {
 
     // 清空所有store设置
     highWindow.resetStoreBtn.click(() => {
-        const commonStore = createCommonStore()
-        commonStore.clear()
-        setInit()
+        confirm('确定吗').then( value => {
+            if (!value) return
+            const commonStore = createCommonStore()
+            commonStore.clear()
+            setInit()
+        })
+
     })
 
-     // 支付宝点赞
+     // 支付宝3连
      highWindow.alipay3OperateIntervalMaxMinus.click(() => {
         updateCommonStoreTime(ALIPAY_3_OPERATE_INTERVAL_MAX, 'minus', 1)
         setInit()
@@ -246,6 +248,10 @@ const createHighWindow = () => {
     highWindow.alipay3OperateIntervalMaxPlus.click(() => {
         updateCommonStoreTime(ALIPAY_3_OPERATE_INTERVAL_MAX, 'plus', 1)
         setInit()
+    })
+
+    highWindow.alipay3OperateTips.click(() => {
+        alert('0不操作,小等于8点赞+收藏+关注，大于8小于等于10点赞+收藏，大于10点赞')
     })
 
     ui.run(() => {

@@ -45,7 +45,6 @@ let timer = null
 let status = 0
 
 const start = (window) => {
-    
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions()
@@ -79,8 +78,8 @@ const start = (window) => {
     // 检测直播
     livePlay(window)
 
-    // 检测是否浏览完成了
-    aLipayBrowseed(window)
+    // 检测是否浏览完成了, 无法动态检测，所以用处不大
+    // aLipayBrowseed(window)
 
     // 检查是否是在播放页面
     checkAlipayPlay()
@@ -96,26 +95,12 @@ const stop = (window) => {
     console.log('上滑停止')
 }
 
-// 随机上滑或者暂停
-const randomOperation = () => {
-    const num = random(1, 10)
-    // 只有等于1的时候才操作
-    if(num != 1) return
 
-    if(random(1, 2) == 1){
-        click(random(5, 10), deviceH / 2 + random(1, 80))
-    } else {
-        const { startX, startY, endX, endY, duration } = getSwipeOptions()
-        // 下划
-        swipe(endX, endY, startX, startY, duration)
-    }
-}
 // 判断是否是直播间
 const livePlay = (window) => {
     setTimeout(() => {
         const live = text('点击进入直播间').exists()
         if (live) {
-            // console.log('检测到直播间')
             setTimeout(() => {
                 start(window)
             }, 2000)
@@ -125,7 +110,27 @@ const livePlay = (window) => {
         randomOperation()
     }, 1000)
 }
-//
+
+// 随机上滑、暂停（点击）、长按快进
+const randomOperation = () => {
+    const num = random(1, 1)
+    // 只有等于1的时候才操作
+    if(num != 1) return
+
+    const code = random(3, 3)
+    if(code == 1){ // 点击暂停操作
+        click(random(5, 10), deviceH / 2 + random(1, 80))
+    } else if (code == 2) { // 上划
+        const { startX, startY, endX, endY, duration } = getSwipeOptions()
+        swipe(endX, endY, startX, startY, duration)
+    } else if (code ==3) { // 长按快进操作
+        const centerX = deviceW / 2
+        const centerY = deviceH / 2
+        const x = random(centerX - 50, centerX + 50)
+        const y = random(centerY - 100, centerY + 100)
+        press(x, y, random(1, 2) * 1000)
+    }
+}
 // 判断支付宝是否全部刷完了
 const aLipayBrowseed = (window) => {
 
@@ -213,15 +218,11 @@ const switchAccount = (window) => {
 // 支付宝3连
 const operate3 = () => {
     const intervalMax = commonStorage.get(ALIPAY_3_OPERATE_INTERVAL_MAX)
-    // 0的话标表示停止
+    // 0的话标表示停止, 不进行三连操作
     if (intervalMax == 0) return
     const randomNum = random(1, Number(intervalMax))
+    // 只有等于才进行操作
     if (randomNum != 1) return
-    // const policy = {
-    //     1: '收藏',
-    //     2: '点赞',
-    //     3: '关注'
-    // }
     const t = random(1, 3)
     if (t === 1) {
         collect()
@@ -252,6 +253,20 @@ const praise = () => {
 const collect = () => {
     const collect = id('com.alipay.android.living.dynamic:id/collect_container').findOnce()
     collect && collect.click()
+}
+// 关闭app
+const closeApp = () => {
+    const startY = random(deviceH - 500 - 100, deviceH - 600) // 起始位置y坐标
+    const endY = random(200, 500)
+    // 打开多任务栏
+   gestures([0, 300, [0, deviceH], [deviceW - 100, deviceH - 600], [deviceW - 200, deviceH - 500]])
+   sleep(2000)
+   // 关闭最右的任务
+   swipe(deviceW - 20, startY, deviceW - 20, endY, 110)
+   sleep(2000)
+   // 回到主页
+   home()
+
 }
 
 module.exports = {
