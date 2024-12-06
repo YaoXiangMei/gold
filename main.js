@@ -109,6 +109,11 @@ const createHighWindow = () => {
                     <text textColor="#ffffff" marginLeft="6">状态：</text>
                     <text id="upRunStatus" textColor="#ffffff">已暂停</text>
                 </horizontal>
+                {/* <horizontal>
+                    <text textColor="#ffffff"></text>
+                    <button id="upTwoLoop" padding="0" width="160px" h='90px'>二人转</button>
+                    <text id="upTwoLoopRunStatus" textColor="#ffffff"></text>
+                </horizontal> */}
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
                     <text textColor="#ffffff">定时开启：</text>
@@ -152,12 +157,18 @@ const createHighWindow = () => {
             up.start(highWindow)
         }, 300)
     })
-
-    highWindow.upStopBtn.click(() => {
-        setTimeout(() => {
-            up.stop(highWindow)
-        }, 300)
-    })
+    // // 上划停止
+    // highWindow.upStopBtn.click(() => {
+    //     setTimeout(() => {
+    //         up.stop(highWindow)
+    //     }, 300)
+    // })
+    // // 上划2人转
+    // highWindow.upTwoLoop.click(() => {
+    //     setTimeout(() => {
+    //         up.twoLoop(highWindow)
+    //     })
+    // })
 
 
     highWindow.closeBtn.click(() => {
@@ -269,6 +280,7 @@ const createHighWindow = () => {
             highWindow.animationTimeMax.setText(commonStore.get(ANIMATION_TIME_MAX).toString())
             highWindow.alipay3OperateIntervalMax.setText(commonStore.get(ALIPAY_3_OPERATE_INTERVAL_MAX).toString())
             highWindow.switchAccountStatus.setText(Number(commonStore.get(ALIPAY_SWITCH_ACCOUNT)) == 1 ? '是' : '否')
+            // up.initTwoLoopRender(highWindow)
         })
     }
 

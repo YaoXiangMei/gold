@@ -43,6 +43,8 @@ const getToday = () => {
 
 let timer = null
 let status = 0
+// let twoLoopStatus = 0 // 0，未开启，1开启
+// let twoLoopIndex = 1
 
 const start = (window) => {
     status = 1
@@ -51,11 +53,27 @@ const start = (window) => {
 
     // console.log('上滑开始', startX, startY, endX, endY, duration)
 
+    // 不开启二人转
+    // if (twoLoopStatus == 0) {
+    //     // 上划
+    //     swipe(startX, startY, endX, endY, duration)
+    // } else if (twoLoopStatus == 1) { // 开启了二人转
+    //     // 如果说是第二个视频
+    //     if (twoLoopIndex == 2) {
+    //         // 下滑-看看一个视频
+    //         swipe(startX, endY, endX, startY, duration)
+    //         twoLoopIndex = 0
+    //     } else {
+    //         // 上划
+    //         swipe(startX, startY, endX, endY, duration)
+    //     }
+    //     twoLoopIndex++
+    // }
     swipe(startX, startY, endX, endY, duration)
-        
     
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
+        // window.upTwoLoopRunStatus.setText(`开启状态：${twoLoopStatus}, 第几个视频：${twoLoopIndex}，请注意调整长视频的位置`)
     })
 
     const intervalTimeMin = Number(commonStorage.get(INTERVAL_TIME_MIN))
@@ -113,11 +131,11 @@ const livePlay = (window) => {
 
 // 随机上滑、暂停（点击）、长按快进
 const randomOperation = () => {
-    const num = random(1, 1)
+    const num = random(1, 10)
     // 只有等于1的时候才操作
     if(num != 1) return
 
-    const code = random(3, 3)
+    const code = random(1, 3)
     if(code == 1){ // 点击暂停操作
         click(random(5, 10), deviceH / 2 + random(1, 80))
     } else if (code == 2) { // 上划
@@ -254,25 +272,31 @@ const collect = () => {
     const collect = id('com.alipay.android.living.dynamic:id/collect_container').findOnce()
     collect && collect.click()
 }
-// 关闭app
-const closeApp = () => {
-    const startY = random(deviceH - 500 - 100, deviceH - 600) // 起始位置y坐标
-    const endY = random(200, 500)
-    // 打开多任务栏
-   gestures([0, 300, [0, deviceH], [deviceW - 100, deviceH - 600], [deviceW - 200, deviceH - 500]])
-   sleep(2000)
-   // 关闭最右的任务
-   swipe(deviceW - 20, startY, deviceW - 20, endY, 110)
-   sleep(2000)
-   // 回到主页
-   home()
 
-}
+// const twoLoop = (window) => {
+//     if (twoLoopStatus == 1) {
+//         twoLoopStatus = 0
+//     } else {
+//         twoLoopStatus = 1
+//     }
+//     twoLoopIndex = 1
+//     ui.run(function(){
+//         window.upTwoLoopRunStatus.setText(`开启状态：${twoLoopStatus}, 第几个视频：${twoLoopIndex}，请注意调整长视频的位置`)
+//     })
+// }
+
+// const initTwoLoopRender = (window) => {
+//     ui.run(function(){
+//         window.upTwoLoopRunStatus.setText(`开启状态：${twoLoopStatus}, 第几个视频：${twoLoopIndex}，请注意调整长视频的位置`)
+//     })
+// }
 
 module.exports = {
     start,
     stop,
     status,
     timer,
-    switchAccount
+    switchAccount,
+    // twoLoop,
+    // initTwoLoopRender,
 }
