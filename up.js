@@ -81,7 +81,7 @@ const start = (window) => {
     livePlay(window)
 
     // 检测是否浏览完成了, 无法动态检测，所以用处不大
-    // aLipayBrowseed(window)
+    aLipayBrowseed(window)
 
     // 检查是否是在播放页面
     checkAlipayPlay()
@@ -132,16 +132,24 @@ const is30Minutes = () => {
 // 随机上滑、暂停（点击）、长按快进
 const randomOperation = () => {
     const num = random(1, 10)
+
+    // 模拟轻摸屏幕
+    if (num == 2) {
+        swipe(deviceW / 2 + random(10, 20), deviceH - random(300, 400), deviceW / 2 - random(30, 40), deviceH - random(400, 500), 300)
+        sleep(300)
+        return
+    }
+
     // 只有等于1的时候才操作
     if(num != 1) return
 
-    const code = random(1, 3)
+    const code = random(1, 5)
     if(code == 1){ // 点击暂停操作
         click(random(5, 10), deviceH / 2 + random(1, 80))
-    } else if (code == 2) { // 上划
+    } else if (code >= 2  && code <= 3) { // 上划
         const { startX, startY, endX, endY, duration } = getSwipeOptions()
         swipe(endX, endY, startX, startY, duration)
-    } else if (code ==3) { // 长按快进操作
+    } else if (code >= 5) { // 长按快进操作
         const centerX = deviceW / 2
         const centerY = deviceH / 2
         const x = random(centerX - 50, centerX + 50)
