@@ -124,6 +124,10 @@ const livePlay = (window) => {
 
 // 判断在每个小时的第30分钟重启一次支付宝
 const is30Minutes = () => {
+    const packageName = currentPackage()
+    // 不是支付宝包名，直接返回
+    if (packageName !== 'com.eg.android.AlipayGphone') return
+    
     const date = new Date()
     const minutes = date.getMinutes()
     return minutes == 30
