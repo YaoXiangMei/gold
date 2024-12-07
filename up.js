@@ -115,6 +115,7 @@ const getRunTime = (window) => {
         window.runingTime.setText(time)
     })
 
+    const packageName = currentPackage()
     // 不是支付宝包名，直接返回
     if (packageName !== 'com.eg.android.AlipayGphone') return
     if (minutes >= 30) {
