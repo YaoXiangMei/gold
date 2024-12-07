@@ -157,10 +157,9 @@ function closeCurrentApp() {
     const endY = random(200, 500)
 
     // 打开多任务栏
-   gestures([0, 300, [0, deviceH], [deviceW - 100, deviceH - 600], [deviceW - 200, deviceH - 500]])
+   gestures([0, 300, [0, deviceH], [deviceW - 100, deviceH / 2], [deviceW - 200, deviceH / 2 + 200]])
    sleep(2000)
    // 关闭最右的任务
-   console.log(deviceW - 30, startY, deviceW - 25, endY)
    swipe(deviceW - 30, startY, deviceW - 25, endY, 200)
    sleep(2000)
    // 回到主页

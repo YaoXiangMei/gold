@@ -45,9 +45,7 @@ let timer = null
 let status = 0
 
 const start = (window) => {
-    // const date = new Date()
-    // console.log(date.getMinutes())
-    // return 
+
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions()
@@ -101,6 +99,21 @@ const stop = (window) => {
 // 判断是否是直播间
 const livePlay = (window) => {
     setTimeout(() => {
+        // 检测是否需要校验
+        const validContainer = id('com.alipay.android.phone.thirdparty:id/process').findOnce()
+        if (validContainer) {
+            const bounds = validContainer.bounds()
+            // 高度
+            const height = bounds.bottom - bounds.top
+        
+            const sX = (bounds.left + height) / 2
+            const sY = (bounds.top + bounds.bottom) / 2
+            const eX = bounds.right
+            const eY = (bounds.top + bounds.bottom) / 2
+
+            swipe(sX, sY, eX, eY, random(700, 1000))
+        }
+
         const live = text('点击进入直播间').exists()
         if (live) {
             setTimeout(() => {
