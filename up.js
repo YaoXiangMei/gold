@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, isAlipay } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, resetOpenAlipay, checkAlipayPlay, isAlipay } = require('./helper.js')
 
 
 
@@ -119,7 +119,8 @@ const getRunTime = (window) => {
     if (minutes >= 30) {
         console.log('已经运行了30分钟')
         stop(window)
-        restartAlipay()
+        // restartAlipay()
+        resetOpenAlipay()
         startRunTime = +Date.now()
         start(window)
     }
