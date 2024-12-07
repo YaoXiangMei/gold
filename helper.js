@@ -237,8 +237,12 @@ function checkAlipayPlay() {
     if (!isAlipay()) return
 
     // 如果不在播放页面，则重新打开支付宝
-    const  tabContainer = id('com.alipay.android.living.dynamic:id/tab_container').exists()
-    if (tabContainer) return
+    const tabContainer = id('com.alipay.android.living.dynamic:id/tab_container').exists()
+    const suspendContainer = id('com.alipay.android.living.dynamic:id/suspendContainer').exists()
+    if (tabContainer || suspendContainer) {
+        levelPlayCount = 0
+        return
+    }
 
     levelPlayCount++
     
