@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, resetOpenAlipay } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, resetOpenAlipay, closeCurrentApp } = require('./helper.js')
 
 
 
@@ -43,6 +43,7 @@ const getToday = () => {
 
 let timer = null
 let status = 0
+let startRunTime = 0
 
 const start = (window) => {
 
@@ -86,15 +87,44 @@ const start = (window) => {
 
 }
 
+const recordRunTimeStart = (window) => {
+    startRunTime = +Date.now()
+    start(window)
+}
+
 const stop = (window) => {
     timer && clearTimeout(timer)
     status = 0
+    startRunTime = 0
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
     })
     console.log('上滑停止')
 }
 
+// 已经运行的时间
+const getRunTime = (window) => {
+    // 计算当前时间和startRunTime相差的时间
+    const now = +Date.now()
+    const diff = now - startRunTime
+    const minutes = Math.floor(diff / 1000 / 60)
+    const seconds = Math.floor(diff / 1000 % 60)
+    const time = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
+    
+    ui.run(function(){
+        window.runingTime.setText(time)
+    })
+
+    // 不是支付宝包名，直接返回
+    if (packageName !== 'com.eg.android.AlipayGphone') return
+    if (minutes >= 30) {
+        stop(window)
+        sleep(45000)
+        resetOpenAlipay()
+        startRunTime = 0
+        start(window)
+    }
+}
 
 // 判断是否是直播间
 const livePlay = (window) => {
@@ -122,29 +152,20 @@ const livePlay = (window) => {
             return 
         }
     
-        if (is30Minutes()) {
-            stop(window)
-            sleep(45000)
-            resetOpenAlipay()
-            start(window)
-            return
-        }
+        // if (is30Minutes()) {
+        //     stop(window)
+        //     sleep(45000)
+        //     resetOpenAlipay()
+        //     start(window)
+        //     return
+        // }
+        getRunTime(window)
 
         operate3()
         randomOperation()
     }, 1000)
 }
 
-// 判断在每个小时的第30分钟重启一次支付宝
-const is30Minutes = () => {
-    const packageName = currentPackage()
-    // 不是支付宝包名，直接返回
-    if (packageName !== 'com.eg.android.AlipayGphone') return
-    
-    const date = new Date()
-    const minutes = date.getMinutes()
-    return minutes == 30
-}
 
 // 随机上滑、暂停（点击）、长按快进
 const randomOperation = () => {
@@ -155,10 +176,9 @@ const randomOperation = () => {
     const num = random(1, 10)
 
     // 模拟轻摸屏幕
-    if (num == 2) {
+    if (num == 2 || num == 3) {
         swipe(deviceW / 2 + random(10, 20), deviceH - random(300, 400), deviceW / 2 - random(30, 40), deviceH - random(400, 500), 300)
         sleep(300)
-        return
     }
 
     // 只有等于1的时候才操作
@@ -167,7 +187,7 @@ const randomOperation = () => {
     const code = random(1, 5)
     if(code == 1){ // 点击暂停操作
         click(random(5, 10), deviceH / 2 + random(1, 80))
-    } else if (code >= 2  && code <= 3) { // 上划
+    } else if (code >= 2  && code <= 3) { // 下滑
         const { startX, startY, endX, endY, duration } = getSwipeOptions()
         swipe(endX, endY, startX, startY, duration)
     } else if (code >= 5) { // 长按快进操作
@@ -250,6 +270,7 @@ const aLipayBrowseed = (window) => {
     // 等待3秒
     sleep(3000)
     // 重新开始
+    startRunTime = 0
     start(window)
 }
 
@@ -307,6 +328,7 @@ const collect = () => {
 }
 
 module.exports = {
+    recordRunTimeStart,
     start,
     stop,
     status,

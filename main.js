@@ -133,6 +133,11 @@ const createHighWindow = () => {
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
+                    <text textColor="#ffffff">已运行的时间(30分钟重启一次)：</text>
+                    <text id="runingTime" textColor="#ffffff"></text>
+                </horizontal>
+                <horizontal h="5px" bg="#ffffff"></horizontal>
+                <horizontal>
                     <text textColor="#ffffff">清空所有设置：</text>
                     <button id="resetStoreBtn" padding="0" width="120px" h='90px'>清空</button>
                 </horizontal>
@@ -149,7 +154,7 @@ const createHighWindow = () => {
     // 上滑操作
     highWindow.upStartBtn.click(() => {
         setTimeout(() => {
-            up.start(highWindow)
+            up.recordRunTimeStart(highWindow)
         }, 300)
     })
     // 上滑操作
