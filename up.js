@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, resetOpenAlipay, closeCurrentApp } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, isAlipay } = require('./helper.js')
 
 
 
@@ -98,6 +98,7 @@ const stop = (window) => {
     startRunTime = +Date.now()
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
+        window.runingTime.setText('0')
     })
     console.log('上滑停止')
 }
@@ -110,18 +111,15 @@ const getRunTime = (window) => {
     const minutes = Math.floor(diff / 1000 / 60)
     const seconds = Math.floor(diff / 1000 % 60)
     const time = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
-    
     ui.run(function(){
         window.runingTime.setText(time)
     })
-
-    const packageName = currentPackage()
     // 不是支付宝包名，直接返回
-    if (packageName !== 'com.eg.android.AlipayGphone') return
+    if (!isAlipay()) return
     if (minutes >= 30) {
+        console.log('已经运行了30分钟')
         stop(window)
-        sleep(2000)
-        resetOpenAlipay()
+        restartAlipay()
         startRunTime = +Date.now()
         start(window)
     }
@@ -153,13 +151,6 @@ const livePlay = (window) => {
             return 
         }
     
-        // if (is30Minutes()) {
-        //     stop(window)
-        //     sleep(45000)
-        //     resetOpenAlipay()
-        //     start(window)
-        //     return
-        // }
         getRunTime(window)
 
         operate3()
@@ -170,9 +161,9 @@ const livePlay = (window) => {
 
 // 随机上滑、暂停（点击）、长按快进
 const randomOperation = () => {
-    const packageName = currentPackage()
+
     // 不是支付宝包名，直接返回
-    if (packageName !== 'com.eg.android.AlipayGphone') return
+    if (!isAlipay()) return
     
     const num = random(1, 10)
 
@@ -202,9 +193,8 @@ const randomOperation = () => {
 // 判断支付宝是否全部刷完了
 const aLipayBrowseed = (window) => {
 
-    const packageName = currentPackage()
     // 不是支付宝包名，直接返回
-    if (packageName !== 'com.eg.android.AlipayGphone') return
+    if (!isAlipay()) return
 
     // 不是iqoo neo5 活力版 手机，直接返回
     if (device.model != 'V2118A') return
@@ -286,9 +276,8 @@ const switchAccount = (window) => {
 
 // 支付宝3连
 const operate3 = () => {
-    const packageName = currentPackage()
     // 不是支付宝包名，直接返回
-    if (packageName !== 'com.eg.android.AlipayGphone') return
+    if (!isAlipay()) return
 
     const intervalMax = commonStorage.get(ALIPAY_3_OPERATE_INTERVAL_MAX)
     // 0的话标表示停止, 不进行三连操作

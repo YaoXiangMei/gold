@@ -116,6 +116,16 @@ const draw = (control, targetControl, floatWindowControl, initX, initY) => {
     })
 }
 
+// 判断是否是支付宝的包名
+function isAlipay() {
+    const packageName = currentPackage()
+    if (packageName === 'com.eg.android.AlipayGphone') return true
+    if (auto.root) {
+        return auto.root.packageName() === 'com.eg.android.AlipayGphone'
+    }
+    return false
+}
+
 // 关闭app
 function killApp(appName) {//填写包名或app名称都可以
     var name = getPackageName(appName);//通过app名称获取包名
@@ -205,7 +215,7 @@ function restartAlipay() {
     openAlipay()
 }
 
-// 重新打开支付宝
+// 重新打开支付宝, 效果不好
 function resetOpenAlipay() {
     // 等待3秒
     sleep(3000)
@@ -222,10 +232,9 @@ function resetOpenAlipay() {
 let levelPlayCount = 0
 // 检测如果在支付宝并且不是在播放页面，则重新打开支付宝
 function checkAlipayPlay() {
-    // console.log('checkAlipayPlay')
-    const packageName = currentPackage()
+
     // 不是支付宝包名，直接返回
-    if (packageName !== 'com.eg.android.AlipayGphone') return
+    if (!isAlipay()) return
 
     // 如果不在播放页面，则重新打开支付宝
     const  tabContainer = id('com.alipay.android.living.dynamic:id/tab_container').exists()
@@ -239,6 +248,7 @@ function checkAlipayPlay() {
         restartAlipay()
     }
 }
+
 
 module.exports = {
     getStatusBarHeight,
@@ -257,5 +267,6 @@ module.exports = {
     openAlipay,
     restartAlipay,
     resetOpenAlipay,
-    checkAlipayPlay
+    checkAlipayPlay,
+    isAlipay
 }
