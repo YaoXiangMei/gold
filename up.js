@@ -95,7 +95,7 @@ const recordRunTimeStart = (window) => {
 const stop = (window) => {
     timer && clearTimeout(timer)
     status = 0
-    startRunTime = 0
+    startRunTime = +Date.now()
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
     })
@@ -120,9 +120,9 @@ const getRunTime = (window) => {
     if (packageName !== 'com.eg.android.AlipayGphone') return
     if (minutes >= 30) {
         stop(window)
-        sleep(45000)
+        sleep(2000)
         resetOpenAlipay()
-        startRunTime = 0
+        startRunTime = +Date.now()
         start(window)
     }
 }
@@ -271,7 +271,7 @@ const aLipayBrowseed = (window) => {
     // 等待3秒
     sleep(3000)
     // 重新开始
-    startRunTime = 0
+    startRunTime = +Date.now()
     start(window)
 }
 
