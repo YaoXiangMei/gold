@@ -189,7 +189,10 @@ function openAlipay() {
     // 等待5秒
     sleep(5000)
     // 打开视频tab
-    click('视频')
+    const flag = click('视频')
+    if (!flag) {
+        click(deviceW / 2, deviceH - 30)
+    }
     // 等待5秒
     sleep(5000)
     // 点击x掉签到弹窗
@@ -220,11 +223,6 @@ function resetOpenAlipay() {
     // 等待3秒
     sleep(3000)
     closeCurrentApp()
-    // 等待3秒
-    sleep(3000)
-    home()
-    // 等待3秒
-    sleep(3000)
     // 打开支付宝
     openAlipay()
 }

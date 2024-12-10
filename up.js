@@ -119,10 +119,14 @@ const getRunTime = (window) => {
     if (minutes >= 30) {
         console.log('已经运行了30分钟')
         stop(window)
-        // restartAlipay()
+        sleep(1000)
+        click('首页')
         resetOpenAlipay()
         startRunTime = +Date.now()
         start(window)
+    } else {
+        operate3()
+        randomOperation()
     }
 }
 
@@ -154,8 +158,6 @@ const livePlay = (window) => {
     
         getRunTime(window)
 
-        operate3()
-        randomOperation()
     }, 1000)
 }
 
@@ -169,7 +171,7 @@ const randomOperation = () => {
     const num = random(1, 10)
 
     // 模拟轻摸屏幕
-    if (num == 2 || num == 3) {
+    if (num == 2 || num == 3 || num == 4) {
         swipe(deviceW / 2 + random(10, 20), deviceH - random(300, 400), deviceW / 2 - random(30, 40), deviceH - random(400, 500), 300)
         sleep(300)
     }
