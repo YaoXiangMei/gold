@@ -116,8 +116,8 @@ const getRunTime = (window) => {
     })
     // 不是支付宝包名，直接返回
     if (!isAlipay()) return
-    if (minutes >= 30) {
-        console.log('已经运行了30分钟')
+    if (minutes >= 50) {
+        console.log('已经运行了50分钟')
         stop(window)
         sleep(1000)
         click('首页')
@@ -171,7 +171,7 @@ const randomOperation = () => {
     const num = random(1, 10)
 
     // 模拟轻摸屏幕
-    if (num == 2 || num == 3 || num == 4) {
+    if (num <= 3) {
         swipe(deviceW / 2 + random(10, 20), deviceH - random(300, 400), deviceW / 2 - random(30, 40), deviceH - random(400, 500), 300)
         sleep(300)
     }
@@ -181,7 +181,8 @@ const randomOperation = () => {
 
     const code = random(1, 5)
     if(code == 1){ // 点击暂停操作
-        click(random(5, 10), deviceH / 2 + random(1, 80))
+        // 不暂停了，浪费时间
+        // click(random(5, 10), deviceH / 2 + random(1, 80))
     } else if (code >= 2  && code <= 3) { // 下滑
         const { startX, startY, endX, endY, duration } = getSwipeOptions()
         swipe(endX, endY, startX, startY, duration)
