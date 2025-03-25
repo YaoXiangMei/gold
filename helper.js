@@ -105,6 +105,7 @@ const draw = (control, targetControl, floatWindowControl, initX, initY) => {
             case event.ACTION_MOVE:
                 distX = event.getRawX() - downX
                 distY = event.getRawY() - downY
+                console.log(initX + distX, initY + distY)
                 targetControl.setPosition(initX + distX, initY + distY)
                 return true
             case event.ACTION_UP:
@@ -196,7 +197,9 @@ function openAlipay() {
     // 等待5秒
     sleep(5000)
     // 点击x掉签到弹窗
-    click(5, deviceH / 2)
+    // click(5, deviceH / 2)
+    click(deviceW / 2, deviceH * 0.81602)
+    
     // 等待3秒
     sleep(3000)
 }
