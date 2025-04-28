@@ -137,21 +137,27 @@ function killApp(appName) {//填写包名或app名称都可以
             return false;
         } 
     }
-
     app.openAppSetting(name);//通过包名打开应用的详情页(设置页)
-    text(app.getAppName(name)).waitFor();//通过包名获取已安装的应用名称，判断是否已经跳转至该app的应用设置界面
-    sleep(500);//稍微休息一下，不然看不到运行过程，自己用时可以删除这行
+    // text(app.getAppName(name)).waitFor();//通过包名获取已安装的应用名称，判断是否已经跳转至该app的应用设置界面
+    sleep(2000);//稍微休息一下，不然看不到运行过程，自己用时可以删除这行
     // let stopBtn = textMatches(/(.*强.*|.*停.*|.*结.*)/).findOne();//在app的应用设置界面找寻包含“强”，“停”，“结”，“行”的控件
     // 查找要停止的控件
-    let stopBtn = textMatches(/(.*强行.*|.*停止.*)/).findOne();
+    let stopBtn = textMatches(/(.*强行.*|.*停止.*)/).findOne(3000);
 
-
-    if (stopBtn.enabled()) {//判断控件是否已启用（想要关闭的app是否运行）
+    if (stopBtn.enabled && stopBtn.enabled()) {//判断控件是否已启用（想要关闭的app是否运行）
         //stopBtn.parent().click();//结束应用的控件如果无法点击，需要在布局中找寻它的父控件，如果还无法点击，再上一级控件，本案例就是控件无法点击
         const stopBounds = stopBtn.bounds()
         click(stopBounds.centerX(), stopBounds.centerY())
-        sleep(2000)
-        const sure = textMatches(/(.*确定.*)/).findOne()
+        sleep(3000)
+        console.log('开始查找确认按钮')
+        // 超过3秒没有找到确认按钮，则返回
+        const sure = textMatches(/(.*确定.*)/).findOne(3000)
+        if (!sure || !sure.bounds) {
+            console.log(sure)
+            console.log('没有找到确认按钮')
+            back()
+            return
+        }
         const bounds = sure.bounds()
         sleep(2000)
         click(bounds.centerX(),bounds.centerY())

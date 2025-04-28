@@ -1,7 +1,18 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, isAlipay } = require('./helper.js')
+const {
+    createCommonStore,
+    INTERVAL_TIME_MIN,
+    INTERVAL_TIME_MAX,
+    ANIMATION_TIME_MIN,
+    ANIMATION_TIME_MAX,
+    ALIPAY_SWITCH_ACCOUNT,
+    restartAlipay,
+    checkAlipayPlay,
+    isAlipay,
+    killApp
+} = require('./helper.js')
 
 
 
@@ -46,7 +57,6 @@ let status = 0
 let startRunTime = 0
 
 const start = (window) => {
-   
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions()
