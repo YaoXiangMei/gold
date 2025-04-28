@@ -1,7 +1,7 @@
 
 
 const { deviceW, deviceH } = require('./config.js')
-const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, resetOpenAlipay, checkAlipayPlay, isAlipay } = require('./helper.js')
+const { createCommonStore, INTERVAL_TIME_MIN, INTERVAL_TIME_MAX, ANIMATION_TIME_MIN, ANIMATION_TIME_MAX, ALIPAY_SWITCH_ACCOUNT, restartAlipay, checkAlipayPlay, isAlipay } = require('./helper.js')
 
 
 
@@ -46,7 +46,7 @@ let status = 0
 let startRunTime = 0
 
 const start = (window) => {
-
+   
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions()
@@ -121,7 +121,7 @@ const getRunTime = (window) => {
         stop(window)
         sleep(1000)
         click('首页')
-        resetOpenAlipay()
+        restartAlipay()
         startRunTime = +Date.now()
         start(window)
     } else {
@@ -200,12 +200,13 @@ const aLipayBrowseed = (window) => {
     // 不是支付宝包名，直接返回
     if (!isAlipay()) return
 
-    // 不是iqoo neo5 活力版 手机，直接返回
-    if (device.model != 'V2118A') return
-
+    
     // const exists = text('明日可领').exists()
     const exists = textContains('明日可领').findOnce()
     if (!exists) return
+
+    // 不是iqoo neo5 活力版 手机，直接返回
+    if (device.model != 'V2118A') return
 
     // 不需要切换账号
     if (commonStorage.get(ALIPAY_SWITCH_ACCOUNT) == 0) {

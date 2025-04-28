@@ -141,11 +141,15 @@ function killApp(appName) {//填写包名或app名称都可以
     app.openAppSetting(name);//通过包名打开应用的详情页(设置页)
     text(app.getAppName(name)).waitFor();//通过包名获取已安装的应用名称，判断是否已经跳转至该app的应用设置界面
     sleep(500);//稍微休息一下，不然看不到运行过程，自己用时可以删除这行
-    let stopBtn = textMatches(/(.*强.*|.*停.*|.*结.*)/).findOne();//在app的应用设置界面找寻包含“强”，“停”，“结”，“行”的控件
+    // let stopBtn = textMatches(/(.*强.*|.*停.*|.*结.*)/).findOne();//在app的应用设置界面找寻包含“强”，“停”，“结”，“行”的控件
+    // 查找要停止的控件
+    let stopBtn = textMatches(/(.*强行.*|.*停止.*)/).findOne();
 
 
     if (stopBtn.enabled()) {//判断控件是否已启用（想要关闭的app是否运行）
-        stopBtn.parent().click();//结束应用的控件如果无法点击，需要在布局中找寻它的父控件，如果还无法点击，再上一级控件，本案例就是控件无法点击
+        //stopBtn.parent().click();//结束应用的控件如果无法点击，需要在布局中找寻它的父控件，如果还无法点击，再上一级控件，本案例就是控件无法点击
+        const stopBounds = stopBtn.bounds()
+        click(stopBounds.centerX(), stopBounds.centerY())
         sleep(2000)
         const sure = textMatches(/(.*确定.*)/).findOne()
         const bounds = sure.bounds()
@@ -196,10 +200,16 @@ function openAlipay() {
     }
     // 等待5秒
     sleep(5000)
-    // 点击x掉签到弹窗
-    // click(5, deviceH / 2)
-    click(deviceW / 2, deviceH * 0.81602)
-    
+
+    // 等待3秒
+    sleep(3000)
+
+    // 点击关闭签到弹窗
+    click(deviceW / 2, (deviceH * 0.76302) + getStatusBarHeight())
+
+    // 点击关闭提示重新开始新一轮的弹窗位置
+    click(deviceW / 2, (deviceH * 0.69302) + getStatusBarHeight())
+
     // 等待3秒
     sleep(3000)
 }
