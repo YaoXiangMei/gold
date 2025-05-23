@@ -44,6 +44,49 @@ const getSwipeOptions = () => {
 
 }
 
+const getSwipeOptions2 = () => {
+   
+    const centerX = deviceW / 2
+    const centerY = deviceH / 2
+
+    // 从中心向上取中心点80%作为起始位置最小值
+    const endMinY = centerY - centerY * 0.8
+    // 从中心向上取中心点40%作为起始位置最大值
+    const endMaxY = centerY - centerY * 0.4
+
+    // 从中心向下取中心点40%作为起始位置最小值
+    const startMinY = centerY + centerY * 0.4
+    // 从中心向下取中心点80%作为起始位置最大值
+    const startMaxY = centerY + centerY * 0.8
+
+    // 从中心向左取中心点40%作为起始位置最小值
+    const startMinX = centerX - centerX * 0.4
+    // 从中心向左取中心点80%作为起始位置最大值
+    const startMaxX = centerX - centerX * 0.8
+    // 从中心向右取中心点40%作为结束位置最小值
+    const endMinX = centerX + centerX * 0.4
+    // 从中心向右取中心点80%作为结束位置最大值
+    const endMaxX = centerX + centerX * 0.8
+
+    const startX = random(startMinX, startMaxX)
+    const startY = random(startMinY, startMaxY)
+    const endX = random(endMinX, endMaxX)
+    const endY = random(endMinY, endMaxY)
+
+    const animationTimeMin = Number(commonStorage.get(ANIMATION_TIME_MIN))
+    const animationTimeMax = Number(commonStorage.get(ANIMATION_TIME_MAX))
+    const duration = random(animationTimeMin, animationTimeMax) // 滑动持续时间，单位为毫秒
+
+    return {
+        startX,
+        startY,
+        endX,
+        endY,
+        duration
+    }
+
+}
+
 const getToday = () => {
     const date = new Date()
     const year = date.getFullYear()
@@ -56,14 +99,37 @@ let timer = null
 let status = 0
 let startRunTime = 0
 
+
+function generatePoints(startX, startY, endX, endY, numPoints) {
+    let points = [];
+    for (let i = 0; i <= numPoints; i++) {
+        let t = i / numPoints;
+        let x = startX + t * (endX - startX);
+        let y = startY + t * (endY - startY);
+        points.push([x, y]);
+    }
+    return points;
+}
+
+function simulateGestures(startX, startY, endX, endY, numPoints, duration) {
+    let points = generatePoints(startX, startY, endX, endY, numPoints);
+    let gestureArgs = points;
+    gestureArgs.unshift(duration)
+    gestures(gestureArgs)
+}
+
 const start = (window) => {
+    // getSwipeOptions2()
+    // return
     status = 1
 
-    const { startX, startY, endX, endY, duration } = getSwipeOptions()
+    const { startX, startY, endX, endY, duration } = getSwipeOptions2()
 
     // console.log('上滑开始', startX, startY, endX, endY, duration)
+    // swipe(startX, startY, endX, endY, duration)
 
-    swipe(startX, startY, endX, endY, duration)
+    // 模拟手势(多个点)
+    simulateGestures(startX, startY, endX, endY, 10, duration)
     
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
