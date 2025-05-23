@@ -49,15 +49,15 @@ const getSwipeOptions2 = () => {
     const centerX = deviceW / 2
     const centerY = deviceH / 2
 
-    // 从中心向上取中心点80%作为起始位置最小值
+    // 从中心向上取中心点80%作为结束位置最小值
     const endMinY = centerY - centerY * 0.8
-    // 从中心向上取中心点40%作为起始位置最大值
+    // 从中心向上取中心点40%作为结束位置最大值
     const endMaxY = centerY - centerY * 0.4
 
     // 从中心向下取中心点40%作为起始位置最小值
     const startMinY = centerY + centerY * 0.4
     // 从中心向下取中心点80%作为起始位置最大值
-    const startMaxY = centerY + centerY * 0.8
+    const startMaxY = centerY + centerY * 0.55
 
     // 从中心向左取中心点40%作为起始位置最小值
     const startMinX = centerX - centerX * 0.4
@@ -111,16 +111,13 @@ function generatePoints(startX, startY, endX, endY, numPoints) {
     return points;
 }
 
-function simulateGestures(startX, startY, endX, endY, numPoints, duration) {
+function simulateGesture(startX, startY, endX, endY, numPoints, duration) {
     let points = generatePoints(startX, startY, endX, endY, numPoints);
     let gestureArgs = points;
-    gestureArgs.unshift(duration)
-    gestures(gestureArgs)
+    gesture(duration, gestureArgs)
 }
 
 const start = (window) => {
-    // getSwipeOptions2()
-    // return
     status = 1
 
     const { startX, startY, endX, endY, duration } = getSwipeOptions2()
@@ -129,7 +126,7 @@ const start = (window) => {
     // swipe(startX, startY, endX, endY, duration)
 
     // 模拟手势(多个点)
-    simulateGestures(startX, startY, endX, endY, 10, duration)
+    simulateGesture(startX, startY, endX, endY, 10, duration)
     
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
@@ -224,7 +221,7 @@ const livePlay = (window) => {
             swipe(sX, sY, eX, eY, random(700, 1000))
         }
 
-        const live = text('点击进入直播间').exists()
+        const live = textMatches(/.*进入直播间/).exists()
         if (live) {
             setTimeout(() => {
                 start(window)
@@ -237,32 +234,40 @@ const livePlay = (window) => {
     }, 1000)
 }
 
-
 // 随机上滑、暂停（点击）、长按快进
 const randomOperation = () => {
-
     // 不是支付宝包名，直接返回
     if (!isAlipay()) return
     
     const num = random(1, 10)
-
+    console.log(`num = ${num}, num <= 5 模拟轻摸屏幕`)
     // 模拟轻摸屏幕
-    if (num <= 3) {
+    if (num <= 5) {
+        console.log('轻摸了屏幕')
         swipe(deviceW / 2 + random(10, 20), deviceH - random(300, 400), deviceW / 2 - random(30, 40), deviceH - random(400, 500), 300)
-        sleep(300)
+        sleep(500)
     }
 
-    // 只有等于1的时候才操作
-    if(num != 1) return
+    // 只有小于等于2的时候才操作
+    if(num > 2) return
 
-    const code = random(1, 5)
+    console.log('num小于等于2的时候才触发，点击暂停，下滑，长按快进')
+
+    const code = random(1, 10)
+    
+    console.log(`code = ${code}`)
+
     if(code == 1){ // 点击暂停操作
-        // 不暂停了，浪费时间
-        // click(random(5, 10), deviceH / 2 + random(1, 80))
-    } else if (code >= 2  && code <= 3) { // 下滑
+        console.log('暂停')
+        click(random(5, 10), deviceH / 2 + random(1, 80))
+        sleep(1000)
+        click(random(5, 10), deviceH / 2 + random(1, 80))
+    } else if (code == 2) { // 下滑
+        console.log('下滑')
         const { startX, startY, endX, endY, duration } = getSwipeOptions()
         swipe(endX, endY, startX, startY, duration)
-    } else if (code >= 5) { // 长按快进操作
+    } else if (code == 3) { // 长按快进
+        console.log('长按快进')
         const centerX = deviceW / 2
         const centerY = deviceH / 2
         const x = random(centerX - 50, centerX + 50)
