@@ -57,16 +57,16 @@ const getSwipeOptions2 = () => {
     // 从中心向下取中心点40%作为起始位置最小值
     const startMinY = centerY + centerY * 0.4
     // 从中心向下取中心点80%作为起始位置最大值
-    const startMaxY = centerY + centerY * 0.55
+    const startMaxY = centerY + centerY * 0.5
 
     // 从中心向左取中心点40%作为起始位置最小值
-    const startMinX = centerX - centerX * 0.4
+    const startMinX = centerX - centerX * 0.2
     // 从中心向左取中心点80%作为起始位置最大值
-    const startMaxX = centerX - centerX * 0.8
+    const startMaxX = centerX - centerX * 0.4
     // 从中心向右取中心点40%作为结束位置最小值
-    const endMinX = centerX + centerX * 0.4
+    const endMinX = centerX + centerX * 0.2
     // 从中心向右取中心点80%作为结束位置最大值
-    const endMaxX = centerX + centerX * 0.8
+    const endMaxX = centerX + centerX * 0.4
 
     const startX = random(startMinX, startMaxX)
     const startY = random(startMinY, startMaxY)
@@ -126,7 +126,7 @@ const start = (window) => {
     // swipe(startX, startY, endX, endY, duration)
 
     // 模拟手势(多个点)
-    simulateGesture(startX, startY, endX, endY, 10, duration)
+    simulateGesture(startX, startY, endX, endY, 15, duration)
     
     ui.run(function(){
         window.upRunStatus.setText(status === 1 ? '运行中' : '已暂停')
