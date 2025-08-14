@@ -133,7 +133,7 @@ const createHighWindow = () => {
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>
                 <horizontal>
-                    <text textColor="#ffffff">已运行的时间(50分钟重启一次)：</text>
+                    <text textColor="#ffffff">已运行的时间(60分钟重启一次)：</text>
                     <text id="runingTime" textColor="#ffffff"></text>
                 </horizontal>
                 <horizontal h="5px" bg="#ffffff"></horizontal>

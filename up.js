@@ -189,8 +189,9 @@ const getRunTime = (window) => {
     })
     // 不是支付宝包名，直接返回
     if (!isAlipay()) return
-    if (minutes >= 50) {
-        console.log('已经运行了50分钟')
+    const v = commonStorage.get(ALIPAY_SWITCH_ACCOUNT)
+    if (minutes >= 60 && commonStorage.get(ALIPAY_SWITCH_ACCOUNT) == 1) {
+        console.log('已经运行了60分钟')
         stop(window)
         sleep(1000)
         click('首页')
